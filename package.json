@@ -1,6 +1,6 @@
 {
   "name": "js-cookie-consent",
-  "version": "1.2.6",
+  "version": "2.0.0",
   "description": "GDPR cookie consent",
   "main": "dist/index.js",
   "scripts": {
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/utazabanje/js-cookie-consent.git"
+    "url": "git+https://github.com/carb-manager/js-cookie-consent.git"
   },
   "keywords": [
     "GDPR",
@@ -19,9 +19,9 @@
   "author": "Miodrag Piletic",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/utazabanje/js-cookie-consent/issues"
+    "url": "https://github.com/carb-manager/js-cookie-consent/issues"
   },
-  "homepage": "https://github.com/utazabanje/js-cookie-consent#readme",
+  "homepage": "https://github.com/carb-manager/js-cookie-consent#readme",
   "devDependencies": {
     "@babel/cli": "^7.11.6",
     "@babel/core": "^7.11.6",
