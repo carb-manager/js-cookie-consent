@@ -1,5 +1,3 @@
-import "./css/styles.css";
-
 const cookieConsent = (config) => {
   if (config === null || config === undefined) {
     return;
@@ -62,8 +60,6 @@ const createLearnMoreLink = (link) => {
   let learnMore = document.createElement("a");
   learnMore.innerHTML = "Learn More";
   learnMore.setAttribute("href", link);
-  learnMore.setAttribute("target", "_blank");
-  learnMore.setAttribute("rel", "noopener noreferrer");
   learnMore.classList.add("cookie-consent-learn-more");
 
   if (link === undefined || link === null || link?.length === 0) {
@@ -75,11 +71,17 @@ const createLearnMoreLink = (link) => {
 
 const createMainToggleBox = (config, mainBox) => {
   let box = document.createElement("div");
+
   let keysArray = [];
   let acceptAllKeysArray = [];
-  let saveBtn = createSaveCookieBox(mainBox, config?.expiration, config?.color);
+  let saveBtn = createSaveCookieBox(
+    mainBox,
+    config?.expiration,
+    config?.color,
+    config?.cookieName
+  );
 
-  box.classList.add("js-cookie-consent-toogle-box", "closed");
+  box.classList.add("js-cookie-consent-toggle-box", "closed");
 
   if (config?.options.length > 0) {
     for (let i = 0; i < config?.options.length; i++) {
@@ -120,7 +122,7 @@ const createToggleBtns = (elem, options, color) => {
 
 const crateToggleContainerElement = () => {
   let innerBox = document.createElement("div");
-  innerBox.classList.add("js-cookie-consent-toogle-box-inner");
+  innerBox.classList.add("js-cookie-consent-toggle-box-inner");
 
   return innerBox;
 };
@@ -143,7 +145,7 @@ const createDescriptionElement = (description) => {
 
 const createActionButtonBox = (config, keys, box) => {
   let btnBox = document.createElement("div");
-  let accept = createAcceptBtn(config?.expiration, box, config?.color, keys);
+  let accept = createAcceptBtn(config, box, config?.color, keys);
   let openSettings = createOpenSettingsBtn(box);
   btnBox.classList.add("cookie-consent-btn-box");
 
@@ -153,7 +155,7 @@ const createActionButtonBox = (config, keys, box) => {
   return btnBox;
 };
 
-const createAcceptBtn = (expiration, box, color, keys) => {
+const createAcceptBtn = (config, box, color, keys) => {
   let acceptAllCookies = document.createElement("button");
   acceptAllCookies.innerHTML = "Accept all";
   acceptAllCookies.setAttribute("id", "acceptAllCookies");
@@ -164,7 +166,7 @@ const createAcceptBtn = (expiration, box, color, keys) => {
   }
 
   acceptAllCookies.addEventListener("click", () =>
-    acceptCookies(expiration, box, keys)
+    acceptCookies(config, box, keys)
   );
 
   return acceptAllCookies;
@@ -184,9 +186,9 @@ const createOpenSettingsBtn = (box) => {
   return openSettings;
 };
 
-const createSaveCookieBox = (box, expiration, color) => {
+const createSaveCookieBox = (box, expiration, color, cookieName) => {
   let saveBox = document.createElement("div");
-  let btn = createSaveCookieBtn(box, expiration, color);
+  let btn = createSaveCookieBtn(box, expiration, color, cookieName);
   saveBox.classList.add("save-cookie-consent-btn-box");
 
   saveBox.appendChild(btn);
@@ -194,7 +196,7 @@ const createSaveCookieBox = (box, expiration, color) => {
   return saveBox;
 };
 
-const createSaveCookieBtn = (box, expiration, color) => {
+const createSaveCookieBtn = (box, expiration, color, cookieName) => {
   let saveCookie = document.createElement("button");
   saveCookie.innerHTML = "Save cookie settings";
   saveCookie.setAttribute("id", "saveCookieSettings");
@@ -207,7 +209,7 @@ const createSaveCookieBtn = (box, expiration, color) => {
   saveCookie.addEventListener("click", () => {
     let savedCookies = sessionStorage.getItem("categories");
 
-    setCookie("cookiesGDPR", savedCookies, expiration);
+    setCookie(cookieName, savedCookies, expiration);
     box.style.display = "none";
   });
 
@@ -284,7 +286,7 @@ const toggleValueInArray = (value) => {
 };
 
 const acceptCookies = (config, box, keys) => {
-  setCookie("cookiesGDPR", JSON.stringify(keys), config?.expiration);
+  setCookie(config?.cookieName, JSON.stringify(keys), config?.expiration);
   box.style.display = "none";
 };
 
