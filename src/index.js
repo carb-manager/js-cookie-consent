@@ -138,7 +138,8 @@ const createActionButtonBox = (config, keys, box) => {
     box,
     config?.expiration,
     config?.color,
-    config?.cookieName
+    config?.cookieName,
+    config?.changed
   );
 
   btnBox.appendChild(saveBtn);
@@ -164,7 +165,7 @@ const createAcceptBtn = (config, box, color, keys) => {
   return acceptAllCookies;
 };
 
-const createSaveCookieBtn = (box, expiration, color, cookieName) => {
+const createSaveCookieBtn = (box, expiration, color, cookieName, changed) => {
   let saveCookie = document.createElement("button");
   saveCookie.innerHTML = "Save cookie settings";
   saveCookie.setAttribute("id", "saveCookieSettings");
@@ -179,6 +180,10 @@ const createSaveCookieBtn = (box, expiration, color, cookieName) => {
 
     setCookie(cookieName, savedCookies, expiration);
     box.style.display = "none";
+
+    if (changed) {
+      changed();
+    }
   });
 
   return saveCookie;
@@ -250,6 +255,7 @@ const toggleValueInArray = (value) => {
 const acceptCookies = (config, box, keys) => {
   setCookie(config?.cookieName, JSON.stringify(keys), config?.expiration);
   box.style.display = "none";
+  config?.changed();
 };
 
 const getCookie = (name) => {

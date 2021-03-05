@@ -129,7 +129,7 @@ var createActionButtonBox = function createActionButtonBox(config, keys, box) {
   var btnBox = document.createElement("div");
   var accept = createAcceptBtn(config, box, config === null || config === void 0 ? void 0 : config.color, keys);
   btnBox.classList.add("cookie-consent-btn-box");
-  var saveBtn = createSaveCookieBtn(box, config === null || config === void 0 ? void 0 : config.expiration, config === null || config === void 0 ? void 0 : config.color, config === null || config === void 0 ? void 0 : config.cookieName);
+  var saveBtn = createSaveCookieBtn(box, config === null || config === void 0 ? void 0 : config.expiration, config === null || config === void 0 ? void 0 : config.color, config === null || config === void 0 ? void 0 : config.cookieName, config === null || config === void 0 ? void 0 : config.changed);
   btnBox.appendChild(saveBtn);
   btnBox.appendChild(accept);
   return btnBox;
@@ -151,7 +151,7 @@ var createAcceptBtn = function createAcceptBtn(config, box, color, keys) {
   return acceptAllCookies;
 };
 
-var createSaveCookieBtn = function createSaveCookieBtn(box, expiration, color, cookieName) {
+var createSaveCookieBtn = function createSaveCookieBtn(box, expiration, color, cookieName, changed) {
   var saveCookie = document.createElement("button");
   saveCookie.innerHTML = "Save cookie settings";
   saveCookie.setAttribute("id", "saveCookieSettings");
@@ -165,6 +165,10 @@ var createSaveCookieBtn = function createSaveCookieBtn(box, expiration, color, c
     var savedCookies = sessionStorage.getItem("categories");
     setCookie(cookieName, savedCookies, expiration);
     box.style.display = "none";
+
+    if (changed) {
+      changed();
+    }
   });
   return saveCookie;
 };
@@ -234,6 +238,7 @@ var toggleValueInArray = function toggleValueInArray(value) {
 var acceptCookies = function acceptCookies(config, box, keys) {
   setCookie(config === null || config === void 0 ? void 0 : config.cookieName, JSON.stringify(keys), config === null || config === void 0 ? void 0 : config.expiration);
   box.style.display = "none";
+  config === null || config === void 0 ? void 0 : config.changed();
 };
 
 var getCookie = function getCookie(name) {
