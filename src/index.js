@@ -1,4 +1,4 @@
-const cookieConsent = (config) => {
+const consent = (config) => {
   if (config === null || config === undefined) {
     return;
   }
@@ -7,7 +7,7 @@ const cookieConsent = (config) => {
   let box = document.createElement("div");
   let mainTextBox = createMainTextBox(config?.message, config?.learnMore);
   let toggleBoxInner = createMainToggleBox(config);
-  box.setAttribute("id", "js-cookie-consent-box");
+  box.setAttribute("id", "js-consent-box");
 
   if (cookieAvailable !== null) {
     box.style.display = "none";
@@ -29,7 +29,7 @@ const cookieConsent = (config) => {
 const createMainTextBox = (text, link) => {
   let textBox = document.createElement("div");
   let message = createMessage(text, link);
-  textBox.classList.add("js-cookie-consent-main-text-box");
+  textBox.classList.add("js-consent-main-text-box");
   textBox.appendChild(message);
 
   return textBox;
@@ -54,7 +54,7 @@ const createLearnMoreLink = (link) => {
   let learnMore = document.createElement("a");
   learnMore.innerHTML = "Learn More";
   learnMore.setAttribute("href", link);
-  learnMore.classList.add("cookie-consent-learn-more");
+  learnMore.classList.add("consent-learn-more");
 
   if (link === undefined || link === null || link?.length === 0) {
     return emptyLink;
@@ -69,7 +69,7 @@ const createMainToggleBox = (config) => {
   let keysArray = [];
   let acceptAllKeysArray = [];
 
-  box.classList.add("js-cookie-consent-toggle-box");
+  box.classList.add("js-consent-toggle-box");
 
   if (config?.options.length > 0) {
     for (let i = 0; i < config?.options.length; i++) {
@@ -108,14 +108,14 @@ const createToggleBtns = (elem, options, color) => {
 
 const crateToggleContainerElement = () => {
   let innerBox = document.createElement("div");
-  innerBox.classList.add("js-cookie-consent-toggle-box-inner");
+  innerBox.classList.add("js-consent-toggle-box-inner");
 
   return innerBox;
 };
 
 const createTitleElement = (title) => {
   let titleContainer = document.createElement("p");
-  titleContainer.classList.add("cookie-consent-settings-title");
+  titleContainer.classList.add("consent-settings-title");
   titleContainer.innerHTML = title;
 
   return titleContainer;
@@ -132,9 +132,9 @@ const createDescriptionElement = (description) => {
 const createActionButtonBox = (config, keys, box) => {
   let btnBox = document.createElement("div");
   let accept = createAcceptBtn(config, box, config?.color, keys);
-  btnBox.classList.add("cookie-consent-btn-box");
+  btnBox.classList.add("consent-btn-box");
 
-  let saveBtn = createSaveCookieBtn(
+  let saveBtn = createSaveBtn(
     box,
     config?.expiration,
     config?.color,
@@ -149,33 +149,31 @@ const createActionButtonBox = (config, keys, box) => {
 };
 
 const createAcceptBtn = (config, box, color, keys) => {
-  let acceptAllCookies = document.createElement("button");
-  acceptAllCookies.innerHTML = "Accept all";
-  acceptAllCookies.setAttribute("id", "acceptAllCookies");
-  acceptAllCookies.classList.add("cookie-consent-button", "accept");
+  let acceptAll = document.createElement("button");
+  acceptAll.innerHTML = "Accept all";
+  acceptAll.setAttribute("id", "acceptAll");
+  acceptAll.classList.add("consent-button", "accept");
 
   if (color) {
-    acceptAllCookies.style.backgroundColor = color;
+    acceptAll.style.backgroundColor = color;
   }
 
-  acceptAllCookies.addEventListener("click", () =>
-    acceptCookies(config, box, keys)
-  );
+  acceptAll.addEventListener("click", () => accept(config, box, keys));
 
-  return acceptAllCookies;
+  return acceptAll;
 };
 
-const createSaveCookieBtn = (box, expiration, color, cookieName, changed) => {
-  let saveCookie = document.createElement("button");
-  saveCookie.innerHTML = "Save cookie settings";
-  saveCookie.setAttribute("id", "saveCookieSettings");
-  saveCookie.classList.add("cookie-consent-button", "save-cookies");
+const createSaveBtn = (box, expiration, color, cookieName, changed) => {
+  let saveBtn = document.createElement("button");
+  saveBtn.innerHTML = "Save cookie settings";
+  saveBtn.setAttribute("id", "saveSettings");
+  saveBtn.classList.add("consent-button", "save-settings");
 
   if (color) {
-    saveCookie.style.backgroundColor = color;
+    saveBtn.style.backgroundColor = color;
   }
 
-  saveCookie.addEventListener("click", () => {
+  saveBtn.addEventListener("click", () => {
     let savedCookies = sessionStorage.getItem("categories");
 
     setCookie(cookieName, savedCookies, expiration);
@@ -186,7 +184,7 @@ const createSaveCookieBtn = (box, expiration, color, cookieName, changed) => {
     }
   });
 
-  return saveCookie;
+  return saveBtn;
 };
 
 const createSliderElement = (options) => {
@@ -252,7 +250,7 @@ const toggleValueInArray = (value) => {
   sessionStorage.setItem("categories", JSON.stringify(categoriesGDPR));
 };
 
-const acceptCookies = (config, box, keys) => {
+const accept = (config, box, keys) => {
   setCookie(config?.cookieName, JSON.stringify(keys), config?.expiration);
   box.style.display = "none";
   config?.changed();
@@ -288,4 +286,4 @@ const setCookie = (name, value, exdays, path) => {
     name + "=" + value + ";" + expires + ";path=" + (path ? path : "/");
 };
 
-export default cookieConsent;
+export default consent;

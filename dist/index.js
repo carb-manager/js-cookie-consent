@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports["default"] = void 0;
 
-var cookieConsent = function cookieConsent(config) {
+var consent = function consent(config) {
   if (config === null || config === undefined) {
     return;
   }
@@ -15,7 +15,7 @@ var cookieConsent = function cookieConsent(config) {
   var box = document.createElement("div");
   var mainTextBox = createMainTextBox(config === null || config === void 0 ? void 0 : config.message, config === null || config === void 0 ? void 0 : config.learnMore);
   var toggleBoxInner = createMainToggleBox(config);
-  box.setAttribute("id", "js-cookie-consent-box");
+  box.setAttribute("id", "js-consent-box");
 
   if (cookieAvailable !== null) {
     box.style.display = "none";
@@ -36,7 +36,7 @@ var cookieConsent = function cookieConsent(config) {
 var createMainTextBox = function createMainTextBox(text, link) {
   var textBox = document.createElement("div");
   var message = createMessage(text, link);
-  textBox.classList.add("js-cookie-consent-main-text-box");
+  textBox.classList.add("js-consent-main-text-box");
   textBox.appendChild(message);
   return textBox;
 };
@@ -57,7 +57,7 @@ var createLearnMoreLink = function createLearnMoreLink(link) {
   var learnMore = document.createElement("a");
   learnMore.innerHTML = "Learn More";
   learnMore.setAttribute("href", link);
-  learnMore.classList.add("cookie-consent-learn-more");
+  learnMore.classList.add("consent-learn-more");
 
   if (link === undefined || link === null || (link === null || link === void 0 ? void 0 : link.length) === 0) {
     return emptyLink;
@@ -70,7 +70,7 @@ var createMainToggleBox = function createMainToggleBox(config) {
   var box = document.createElement("div");
   var keysArray = [];
   var acceptAllKeysArray = [];
-  box.classList.add("js-cookie-consent-toggle-box");
+  box.classList.add("js-consent-toggle-box");
 
   if ((config === null || config === void 0 ? void 0 : config.options.length) > 0) {
     for (var i = 0; i < (config === null || config === void 0 ? void 0 : config.options.length); i++) {
@@ -107,13 +107,13 @@ var createToggleBtns = function createToggleBtns(elem, options, color) {
 
 var crateToggleContainerElement = function crateToggleContainerElement() {
   var innerBox = document.createElement("div");
-  innerBox.classList.add("js-cookie-consent-toggle-box-inner");
+  innerBox.classList.add("js-consent-toggle-box-inner");
   return innerBox;
 };
 
 var createTitleElement = function createTitleElement(title) {
   var titleContainer = document.createElement("p");
-  titleContainer.classList.add("cookie-consent-settings-title");
+  titleContainer.classList.add("consent-settings-title");
   titleContainer.innerHTML = title;
   return titleContainer;
 };
@@ -128,40 +128,40 @@ var createDescriptionElement = function createDescriptionElement(description) {
 var createActionButtonBox = function createActionButtonBox(config, keys, box) {
   var btnBox = document.createElement("div");
   var accept = createAcceptBtn(config, box, config === null || config === void 0 ? void 0 : config.color, keys);
-  btnBox.classList.add("cookie-consent-btn-box");
-  var saveBtn = createSaveCookieBtn(box, config === null || config === void 0 ? void 0 : config.expiration, config === null || config === void 0 ? void 0 : config.color, config === null || config === void 0 ? void 0 : config.cookieName, config === null || config === void 0 ? void 0 : config.changed);
+  btnBox.classList.add("consent-btn-box");
+  var saveBtn = createSaveBtn(box, config === null || config === void 0 ? void 0 : config.expiration, config === null || config === void 0 ? void 0 : config.color, config === null || config === void 0 ? void 0 : config.cookieName, config === null || config === void 0 ? void 0 : config.changed);
   btnBox.appendChild(saveBtn);
   btnBox.appendChild(accept);
   return btnBox;
 };
 
 var createAcceptBtn = function createAcceptBtn(config, box, color, keys) {
-  var acceptAllCookies = document.createElement("button");
-  acceptAllCookies.innerHTML = "Accept all";
-  acceptAllCookies.setAttribute("id", "acceptAllCookies");
-  acceptAllCookies.classList.add("cookie-consent-button", "accept");
+  var acceptAll = document.createElement("button");
+  acceptAll.innerHTML = "Accept all";
+  acceptAll.setAttribute("id", "acceptAll");
+  acceptAll.classList.add("consent-button", "accept");
 
   if (color) {
-    acceptAllCookies.style.backgroundColor = color;
+    acceptAll.style.backgroundColor = color;
   }
 
-  acceptAllCookies.addEventListener("click", function () {
-    return acceptCookies(config, box, keys);
+  acceptAll.addEventListener("click", function () {
+    return accept(config, box, keys);
   });
-  return acceptAllCookies;
+  return acceptAll;
 };
 
-var createSaveCookieBtn = function createSaveCookieBtn(box, expiration, color, cookieName, changed) {
-  var saveCookie = document.createElement("button");
-  saveCookie.innerHTML = "Save cookie settings";
-  saveCookie.setAttribute("id", "saveCookieSettings");
-  saveCookie.classList.add("cookie-consent-button", "save-cookies");
+var createSaveBtn = function createSaveBtn(box, expiration, color, cookieName, changed) {
+  var saveBtn = document.createElement("button");
+  saveBtn.innerHTML = "Save cookie settings";
+  saveBtn.setAttribute("id", "saveSettings");
+  saveBtn.classList.add("consent-button", "save-settings");
 
   if (color) {
-    saveCookie.style.backgroundColor = color;
+    saveBtn.style.backgroundColor = color;
   }
 
-  saveCookie.addEventListener("click", function () {
+  saveBtn.addEventListener("click", function () {
     var savedCookies = sessionStorage.getItem("categories");
     setCookie(cookieName, savedCookies, expiration);
     box.style.display = "none";
@@ -170,7 +170,7 @@ var createSaveCookieBtn = function createSaveCookieBtn(box, expiration, color, c
       changed();
     }
   });
-  return saveCookie;
+  return saveBtn;
 };
 
 var createSliderElement = function createSliderElement(options) {
@@ -235,7 +235,7 @@ var toggleValueInArray = function toggleValueInArray(value) {
   sessionStorage.setItem("categories", JSON.stringify(categoriesGDPR));
 };
 
-var acceptCookies = function acceptCookies(config, box, keys) {
+var accept = function accept(config, box, keys) {
   setCookie(config === null || config === void 0 ? void 0 : config.cookieName, JSON.stringify(keys), config === null || config === void 0 ? void 0 : config.expiration);
   box.style.display = "none";
   config === null || config === void 0 ? void 0 : config.changed();
@@ -269,5 +269,5 @@ var setCookie = function setCookie(name, value, exdays, path) {
   document.cookie = name + "=" + value + ";" + expires + ";path=" + (path ? path : "/");
 };
 
-var _default = cookieConsent;
+var _default = consent;
 exports["default"] = _default;
